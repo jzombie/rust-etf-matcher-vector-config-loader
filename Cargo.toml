@@ -1,0 +1,13 @@
+[package]
+name = "etf-matcher-vector-config-loader"
+authors = ["Jeremy Harris <jeremy.harris@zenosmosis.com>"]
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/jzombie/etf-matcher-vector-config-loader"
+description = "Download and parse ETF Matcher ticker vector configurations."
+license = "MIT"
+
+[dependencies]
+toml = "0.8.19"
+serde = { version = "1.0.217", features = ["derive"] }
+reqwest = { version = "0.12.12", features = ["blocking"] }
