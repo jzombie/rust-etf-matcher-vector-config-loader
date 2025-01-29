@@ -1,9 +1,9 @@
 [package]
 name = "etf-matcher-vector-config-loader"
 authors = ["Jeremy Harris <jeremy.harris@zenosmosis.com>"]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-repository = "https://github.com/jzombie/etf-matcher-vector-config-loader"
+repository = "https://github.com/jzombie/rust-etf-matcher-vector-config-loader"
 description = "Download and parse ETF Matcher ticker vector configurations."
 license = "MIT"
 
