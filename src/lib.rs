@@ -1,6 +1,7 @@
 use reqwest;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::error::Error;
 
 static BASE_URL: &str = "https://etfmatcher.com/data/";
 
@@ -92,6 +93,22 @@ pub fn get_symbol_map_url() -> String {
     get_resource_url("ticker_symbol_map.flatbuffers.bin")
 }
 
+/// Fetches the ETF Matcher ticker symbol map as raw bytes.
+///
+/// # Returns
+/// * `Ok(Vec<u8>)` containing the binary data.
+/// * `Err(Box<dyn std::error::Error>)` if the request fails.
+///
+/// # Example
+/// ```
+/// use etf_matcher_vector_config_loader::get_symbol_map;
+/// let data = get_symbol_map().unwrap();
+/// println!("Downloaded {} bytes", data.len());
+/// ```
+pub fn get_symbol_map() -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    get_resource(&get_symbol_map_url())
+}
+
 /// Constructs a fully qualified URL for a given filename.
 ///
 /// # Arguments
@@ -108,6 +125,37 @@ pub fn get_symbol_map_url() -> String {
 /// ```
 pub fn get_resource_url(filename: &str) -> String {
     format!("{}{}", BASE_URL, filename)
+}
+
+/// Fetches a resource, automatically determining if it's a filename or a full URL.
+///
+/// # Arguments
+/// * `path` - Either a filename (e.g., `"dataset.bin"`) or a full URL (`"https://example.com/data.bin"`).
+///
+/// # Returns
+/// * `Ok(Vec<u8>)` containing the binary data.
+/// * `Err(Box<dyn std::error::Error>)` if the request fails.
+///
+/// # Example
+/// ```
+/// use etf_matcher_vector_config_loader::get_resource;
+///
+/// // Fetch using a filename (automatically constructs full URL)
+/// let data = get_resource("sample.bin").unwrap();
+///
+/// // Fetch using a full URL
+/// let data = get_resource("https://example.com/data.bin").unwrap();
+/// ```
+pub fn get_resource(path: &str) -> Result<Vec<u8>, Box<dyn Error>> {
+    // Check if the input looks like a full URL
+    let url = if path.starts_with("http://") || path.starts_with("https://") {
+        path.to_string() // Already an FQDN, use as-is
+    } else {
+        get_resource_url(path) // It's a filename, construct full URL
+    };
+
+    let response = reqwest::blocking::get(url)?.bytes()?;
+    Ok(response.to_vec())
 }
 
 /// Fetches the ETF Matcher ticker vector configurations from a remote TOML file.
