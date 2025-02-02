@@ -3,29 +3,6 @@ A Rust library for downloading and parsing [ETF Matcher](https://etfmatcher.com/
 
 ## Examples
 
-### Load an ETF Matcher Configuration by Key
-Retrieve a specific ETF vector configuration (e.g., `"v5-sma-lstm-stacks"`):
-
-```rust
-use etf_matcher_vector_config_loader::get_etf_matcher_config_by_key;
-
-fn main() {
-    let config = get_etf_matcher_config_by_key("v5-sma-lstm-stacks").unwrap();
-    
-    println!("Vector Config Path: {}", config.path);
-    println!("Description: {:?}", config.description.unwrap_or("No description".to_string()));
-    println!("Feature Count: {:?}", config.features.unwrap_or(0));
-}
-```
-🔹 **Example Output:**
-```text
-Vector Config Path: v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
-Description: "v5 SMA LSTM STACKS"
-Feature Count: 158
-```
-
----
-
 ### Fetch All ETF Matcher Configurations
 Retrieve **all** available configurations and print their paths:
 
@@ -46,6 +23,29 @@ fn main() {
 Available Configurations:
 default -> v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
 v5-sma-lstm-stacks -> v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
+```
+
+---
+
+### Load an ETF Matcher Configuration by Key
+Retrieve a specific ETF vector configuration (e.g., `"v5-sma-lstm-stacks"`):
+
+```rust
+use etf_matcher_vector_config_loader::get_etf_matcher_config_by_key;
+
+fn main() {
+    let config = get_etf_matcher_config_by_key("v5-sma-lstm-stacks").unwrap();
+    
+    println!("Vector Config Path: {}", config.path);
+    println!("Description: {:?}", config.description.unwrap_or("No description".to_string()));
+    println!("Feature Count: {:?}", config.features.unwrap_or(0));
+}
+```
+🔹 **Example Output:**
+```text
+Vector Config Path: v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
+Description: "v5 SMA LSTM STACKS"
+Feature Count: 158
 ```
 
 ---
