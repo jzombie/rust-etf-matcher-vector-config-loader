@@ -50,66 +50,34 @@ v5-sma-lstm-stacks -> v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.f
 
 ---
 
-### **Get the Fully Qualified URL for an ETF Matcher Dataset**
-Construct a **fully qualified URL** to download a specific dataset:
+### Load Default Ticker Vectors Collection and Symbol Map
+Retrieve the **ticker vectors** collection and symbol map, then initialize repositories.
 
 ```rust
-use etf_matcher_vector_config_loader::get_resource_url;
+use etf_matcher_vector_config_loader::{get_ticker_vectors_collection_by_key, get_symbol_map};
 
 fn main() {
-    let dataset_url = get_resource_url("v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin");
-    println!("Download URL: {}", dataset_url);
+    // Load ticker vectors collection
+    // Where `default` represents the key of the default configuration
+    let ticker_vectors_collection_bytes: Vec<u8> = get_ticker_vectors_collection_by_key("default")
+        .map_err(|err| format!("Error when loading ticker vectors collection. {:?}", err))
+        .expect("Failed to load ticker vectors collection");
+
+    // Load ticker symbol map
+    // In most cases, the ticker symbol map includes all available ticker vector 
+    // collections. However, some entities may not be mapped if the chosen ticker 
+    // vector collection has not been recently updated.
+    let ticker_symbol_map_bytes: Vec<u8> = get_symbol_map()
+                .map_err(|err| format!("Error when loading ticker symbol map. {:?}", err))
+        .expect("Failed to load ticker symbol map");
+
+    // Example usage
+    println!("Ticker vector repository and symbol mapper initialized successfully.");
 }
 ```
 🔹 **Example Output:**
 ```text
-Download URL: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
-```
-
----
-
-### **Fetch and Use a Configuration to Download a File**
-Dynamically fetch a **specific configuration** and construct its **download URL**:
-
-```rust
-use etf_matcher_vector_config_loader::{get_etf_matcher_config_by_key, get_resource_url};
-
-fn main() {
-    let config = get_etf_matcher_config_by_key("default").unwrap();
-    
-    let dataset_url = get_resource_url(&config.path);
-    println!("Download dataset from: {}", dataset_url);
-}
-```
-🔹 **Example Output:**
-```text
-Download dataset from: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
-```
-
----
-
-### **Verify if a Specific ETF Matcher Config Exists**
-Check if a given configuration **exists** before using it:
-
-```rust
-use etf_matcher_vector_config_loader::{get_all_etf_matcher_configs, get_config_by_key};
-
-fn main() {
-    let configs = get_all_etf_matcher_configs().unwrap();
-
-    let config_key = "v5-sma-lstm-stacks";
-    if let Some(config) = get_config_by_key(&configs, config_key) {
-        println!("Configuration '{}' found!", config_key);
-        println!("Path: {}", config.path);
-    } else {
-        println!("Configuration '{}' does not exist.", config_key);
-    }
-}
-```
-🔹 **Example Output:**
-```text
-Configuration 'v5-sma-lstm-stacks' found!
-Path: v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
+Ticker vector repository and symbol mapper initialized successfully.
 ```
 
 ## License
