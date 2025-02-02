@@ -7,7 +7,7 @@ A Rust library for downloading and parsing [ETF Matcher](https://etfmatcher.com/
 Retrieve a specific ETF vector configuration (e.g., `"v5-sma-lstm-stacks"`):
 
 ```rust
-use rust_etf_matcher_vector_config_loader::get_etf_matcher_config_by_key;
+use etf_matcher_vector_config_loader::get_etf_matcher_config_by_key;
 
 fn main() {
     let config = get_etf_matcher_config_by_key("v5-sma-lstm-stacks").unwrap();
@@ -18,7 +18,7 @@ fn main() {
 }
 ```
 🔹 **Example Output:**
-```
+```text
 Vector Config Path: v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
 Description: "v5 SMA LSTM STACKS"
 Feature Count: 158
@@ -30,7 +30,7 @@ Feature Count: 158
 Retrieve **all** available configurations and print their paths:
 
 ```rust
-use rust_etf_matcher_vector_config_loader::get_all_etf_matcher_configs;
+use etf_matcher_vector_config_loader::get_all_etf_matcher_configs;
 
 fn main() {
     let configs = get_all_etf_matcher_configs().unwrap();
@@ -42,7 +42,7 @@ fn main() {
 }
 ```
 🔹 **Example Output:**
-```
+```text
 Available Configurations:
 default -> v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
 v5-sma-lstm-stacks -> v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
@@ -54,7 +54,7 @@ v5-sma-lstm-stacks -> v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.f
 Construct a **fully qualified URL** to download a specific dataset:
 
 ```rust
-use rust_etf_matcher_vector_config_loader::get_resource_url;
+use etf_matcher_vector_config_loader::get_resource_url;
 
 fn main() {
     let dataset_url = get_resource_url("v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin");
@@ -62,7 +62,7 @@ fn main() {
 }
 ```
 🔹 **Example Output:**
-```
+```text
 Download URL: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
 ```
 
@@ -72,7 +72,7 @@ Download URL: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker_vectors_
 Dynamically fetch a **specific configuration** and construct its **download URL**:
 
 ```rust
-use rust_etf_matcher_vector_config_loader::{get_etf_matcher_config_by_key, get_resource_url};
+use etf_matcher_vector_config_loader::{get_etf_matcher_config_by_key, get_resource_url};
 
 fn main() {
     let config = get_etf_matcher_config_by_key("default").unwrap();
@@ -82,7 +82,7 @@ fn main() {
 }
 ```
 🔹 **Example Output:**
-```
+```text
 Download dataset from: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker_vectors_collection.flatbuffers.bin
 ```
 
@@ -92,7 +92,7 @@ Download dataset from: https://etfmatcher.com/data/v5.SPY-CORR-NO-SCALE-2.ticker
 Check if a given configuration **exists** before using it:
 
 ```rust
-use rust_etf_matcher_vector_config_loader::{get_all_etf_matcher_configs, get_config_by_key};
+use etf_matcher_vector_config_loader::{get_all_etf_matcher_configs, get_config_by_key};
 
 fn main() {
     let configs = get_all_etf_matcher_configs().unwrap();
@@ -107,7 +107,7 @@ fn main() {
 }
 ```
 🔹 **Example Output:**
-```
+```text
 Configuration 'v5-sma-lstm-stacks' found!
 Path: v5.SMA-LSTM-STACKS.autoencoder.ticker_vectors_collection.flatbuffers.bin
 ```
