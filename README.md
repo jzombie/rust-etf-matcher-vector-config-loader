@@ -68,7 +68,7 @@ fn main() {
     // collections. However, some entities may not be mapped if the chosen ticker 
     // vector collection has not been recently updated.
     let ticker_symbol_map_bytes: Vec<u8> = get_symbol_map()
-                .map_err(|err| format!("Error when loading ticker symbol map. {:?}", err))
+        .map_err(|err| format!("Error when loading ticker symbol map. {:?}", err))
         .expect("Failed to load ticker symbol map");
 
     // Example usage
