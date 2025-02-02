@@ -1,3 +1,6 @@
+#[cfg(doctest)]
+doc_comment::doctest!("../README.md");
+
 use reqwest;
 use serde::Deserialize;
 use std::collections::HashMap;
