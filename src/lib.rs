@@ -78,6 +78,31 @@ pub fn get_etf_matcher_config_by_key(
     Ok(selected_config.clone())
 }
 
+/// Fetches the ticker vectors collection using a specific ETF Matcher configuration key.
+///
+/// # Arguments
+/// * `key` - The name of the configuration to retrieve.
+///
+/// # Returns
+/// * `Ok(Vec<u8>)` containing the binary data.
+/// * `Err(Box<dyn std::error::Error>)` if fetching fails.
+///
+/// # Example
+/// ```
+/// use etf_matcher_vector_config_loader::get_ticker_vectors_collection_by_key;
+/// let data = get_ticker_vectors_collection_by_key("v5-sma-lstm-stacks").unwrap();
+/// println!("Downloaded {} bytes of ticker vectors", data.len());
+/// ```
+pub fn get_ticker_vectors_collection_by_key(
+    key: &str,
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    // Fetch the configuration by key
+    let config = get_etf_matcher_config_by_key(key)?;
+
+    // Fetch the ticker vectors collection file using the config path
+    get_resource(&config.path)
+}
+
 /// Retrieves the fully qualified URL for the ticker symbol map file.
 ///
 /// # Returns
