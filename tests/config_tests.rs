@@ -1,5 +1,5 @@
 use etf_matcher_vector_config_loader::*;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[test]
 fn test_get_all_etf_matcher_configs() {
@@ -10,7 +10,7 @@ fn test_get_all_etf_matcher_configs() {
     let configs = configs.unwrap();
     assert!(
         !configs.is_empty(),
-        "Expected some configurations but got an empty HashMap"
+        "Expected some configurations but got an empty BTreeMap"
     );
 
     // Optionally check if a known key exists (if a specific key is expected)
@@ -62,7 +62,7 @@ fn test_get_symbol_map_url() {
 
 #[test]
 fn test_get_config_by_key() {
-    let mut configs = HashMap::new();
+    let mut configs = BTreeMap::new();
     configs.insert(
         "test".to_string(),
         TickerVectorConfig {
