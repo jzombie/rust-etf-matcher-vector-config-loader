@@ -3,7 +3,7 @@ doc_comment::doctest!("../README.md");
 
 use reqwest;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::error::Error;
 
 static BASE_URL: &str = "https://etfmatcher.com/data/";
@@ -30,18 +30,20 @@ pub struct TickerVectorConfig {
     pub training_data_sources: Option<Vec<String>>,
 }
 
+pub type TickerVectorConfigMap = BTreeMap<String, TickerVectorConfig>;
+
 /// Represents the structure of the entire TOML configuration file.
 /// The configuration contains multiple named ticker vector configurations.
 #[derive(Debug, Deserialize)]
 pub struct Config {
     #[serde(rename = "ticker_vector_config")]
-    pub ticker_vector_config: HashMap<String, TickerVectorConfig>,
+    pub ticker_vector_config: TickerVectorConfigMap,
 }
 
 /// Fetches all ETF Matcher ticker vector configurations.
 ///
 /// # Returns
-/// * `Ok(HashMap<String, TickerVectorConfig>)` if the request succeeds.
+/// * `Ok(TickerVectorConfigMap)` if the request succeeds.
 /// * `Err(Box<dyn std::error::Error>)` if the request fails.
 ///
 /// # Example
@@ -50,8 +52,7 @@ pub struct Config {
 /// let configs = get_all_etf_matcher_configs().unwrap();
 /// println!("Loaded {} configurations", configs.len());
 /// ```
-pub fn get_all_etf_matcher_configs(
-) -> Result<HashMap<String, TickerVectorConfig>, Box<dyn std::error::Error>> {
+pub fn get_all_etf_matcher_configs() -> Result<TickerVectorConfigMap, Box<dyn std::error::Error>> {
     load_all_configs_from_url(&format!("{}ticker_vector_configs.toml", BASE_URL))
 }
 
@@ -192,7 +193,7 @@ pub fn get_resource(path: &str) -> Result<Vec<u8>, Box<dyn Error>> {
 /// * `url` - The URL of the TOML configuration file.
 ///
 /// # Returns
-/// * `Ok(HashMap<String, TickerVectorConfig>)` on success.
+/// * `Ok(TickerVectorConfigMap)` on success.
 /// * `Err(Box<dyn std::error::Error>)` if the request fails or the TOML parsing fails.
 ///
 /// # Example
@@ -203,21 +204,21 @@ pub fn get_resource(path: &str) -> Result<Vec<u8>, Box<dyn Error>> {
 /// ```
 pub fn load_all_configs_from_url(
     url: &str,
-) -> Result<HashMap<String, TickerVectorConfig>, Box<dyn std::error::Error>> {
+) -> Result<TickerVectorConfigMap, Box<dyn std::error::Error>> {
     // Fetch the TOML file from the remote URL.
     let response = reqwest::blocking::get(url)?.text()?;
 
     // Parse the TOML content into a Config struct.
     let config: Config = toml::from_str(&response)?;
 
-    // Return all configurations as a HashMap.
+    // Return all configurations as a BTreeMap.
     Ok(config.ticker_vector_config)
 }
 
 /// Retrieves a specific configuration from the loaded ETF Matcher configurations.
 ///
 /// # Arguments
-/// * `configs` - A reference to the `HashMap` containing configurations.
+/// * `configs` - A reference to the `BTreeMap` containing configurations.
 /// * `key` - The key name of the configuration to retrieve.
 ///
 /// # Returns
@@ -232,7 +233,7 @@ pub fn load_all_configs_from_url(
 /// assert!(config.is_some());
 /// ```
 pub fn get_config_by_key<'a>(
-    configs: &'a HashMap<String, TickerVectorConfig>,
+    configs: &'a TickerVectorConfigMap,
     key: &str,
 ) -> Option<&'a TickerVectorConfig> {
     configs.get(key)
